@@ -1,0 +1,6 @@
+name: SFSellTools
+main: gecko10000.sfselltools.SFSellTools
+version: ${projectVersion}
+api-version: 1.13
+depend:
+  - Slimefun

@@ -1,0 +1,46 @@
+plugins {
+    id 'java'
+    id 'idea'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir "src"
+        }
+        resources {
+            srcDir "res"
+        }
+    }
+}
+
+group 'gecko10000'
+version '0.1'
+sourceCompatibility=17
+targetCompatibility=17
+
+repositories {
+    maven { url "https://repo.papermc.io/repository/maven-public/" }
+    maven { url "https://jitpack.io" }
+}
+
+dependencies {
+    compileOnly "io.papermc.paper:paper-api:1.19.2-R0.1-SNAPSHOT"
+    compileOnly("com.github.Slimefun:Slimefun4:RC-28") {
+        exclude group: "io.github.baked-libs", module: "dough-api"
+    }
+}
+processResources {
+    expand projectVersion: project.version
+}
+
+// a personal task i use when developing
+tasks.register("ftp") {
+    dependsOn build
+    doLast {
+        exec {
+            workingDir "../../"
+            commandLine "./bin/upload.sh", "SFSellTools"
+        }
+    }
+}
