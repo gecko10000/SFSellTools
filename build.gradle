@@ -26,7 +26,7 @@ repositories {
 
 dependencies {
     compileOnly "io.papermc.paper:paper-api:1.19.2-R0.1-SNAPSHOT"
-    compileOnly("com.github.Slimefun:Slimefun4:RC-28") {
+    compileOnly("com.github.Slimefun:Slimefun4:RC-32") {
         exclude group: "io.github.baked-libs", module: "dough-api"
     }
 }
