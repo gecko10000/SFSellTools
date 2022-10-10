@@ -6,6 +6,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class SFSellTools extends JavaPlugin implements SlimefunAddon {
+
+    private static SFSellTools instance;
+
+    public void onEnable() {
+        instance = this;
+        new ItemManager();
+    }
+
     @NotNull
     @Override
     public JavaPlugin getJavaPlugin() {
@@ -17,4 +25,9 @@ public class SFSellTools extends JavaPlugin implements SlimefunAddon {
     public String getBugTrackerURL() {
         return "https://github.com/gecko10000/SFSellTools/issues";
     }
+
+    public static SFSellTools get() {
+        return instance;
+    }
+
 }

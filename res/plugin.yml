@@ -4,3 +4,4 @@ version: ${projectVersion}
 api-version: 1.14
 depend:
   - Slimefun
+  - Vault
