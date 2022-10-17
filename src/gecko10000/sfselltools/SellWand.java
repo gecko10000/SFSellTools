@@ -54,8 +54,9 @@ public class SellWand extends SlimefunItem implements Rechargeable {
             if (price == null || price < 0) continue;
             int amount = item.getAmount();
             if (!removeItemCharge(wand, (float) (perItem * amount))) break;
-            //depositMoney(player, price * amount);
-            inv.setItem(i, null);
+            if (SFSellTools.get().deposit(player, price * amount)) {
+                inv.setItem(i, null);
+            }
         }
     }
 
