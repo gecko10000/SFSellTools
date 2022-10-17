@@ -7,7 +7,10 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.attributes.Rechargeable;
 import io.github.thebusybiscuit.slimefun4.core.handlers.ItemUseHandler;
+import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
@@ -34,14 +37,19 @@ public class SellWand extends SlimefunItem implements Rechargeable {
     }
 
     private void handle(PlayerRightClickEvent e) {
-        Block b = e.getClickedBlock().orElse(null);
-        if (b == null) return;
-        SlimefunItem block = BlockStorage.check(b);
-        if (block == null) {
-            if (!(b.getState() instanceof InventoryHolder holder)) return;
+        Player player = e.getPlayer();
+        Block block = e.getClickedBlock().orElse(null);
+        if (block == null) return;
+        if (!Slimefun.getProtectionManager().hasPermission(player, block, Interaction.INTERACT_BLOCK)) return;
+        SlimefunItem sfBlock = BlockStorage.check(block);
+        // vanilla inventories (we get the block instead of the inventory because we don't want to sell on inventory-less SF blocks)
+        if (sfBlock == null) {
+            if (!(block.getState() instanceof InventoryHolder holder)) return;
             e.cancel();
-            vanillaSell(e.getPlayer(), e.getItem(), holder.getInventory());
+            vanillaSell(player, e.getItem(), holder.getInventory());
+            return;
         }
+        // TODO: selling SF containers?
     }
 
     private void vanillaSell(Player player, ItemStack wand, Inventory inv) {
