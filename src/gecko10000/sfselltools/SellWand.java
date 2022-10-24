@@ -12,6 +12,8 @@ import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -20,6 +22,8 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 public class SellWand extends SlimefunItem implements Rechargeable {
+
+    private final MiniMessage miniMessage = MiniMessage.miniMessage();
 
     private final double maxCharge;
     private final double perItem;
@@ -53,6 +57,8 @@ public class SellWand extends SlimefunItem implements Rechargeable {
     }
 
     private void vanillaSell(Player player, ItemStack wand, Inventory inv) {
+        int totalAmount = 0;
+        double totalPrice = 0;
         for (int i = 0; i < inv.getSize(); i++) {
             ItemStack item = inv.getItem(i);
             if (item == null) continue;
@@ -62,10 +68,14 @@ public class SellWand extends SlimefunItem implements Rechargeable {
             if (price == null || price < 0) continue;
             int amount = item.getAmount();
             if (!removeItemCharge(wand, (float) (perItem * amount))) break;
-            if (SFSellTools.get().deposit(player, price * amount)) {
+            double toDeposit = price * amount;
+            if (SFSellTools.get().deposit(player, toDeposit)) {
+                totalAmount += amount;
                 inv.setItem(i, null);
+                totalPrice += toDeposit;
             }
         }
+        player.sendMessage(miniMessage.deserialize("<dark_green>You sold <green><amount></green> items for <green>$<price></green>.", Placeholder.unparsed("amount", totalAmount + ""), Placeholder.unparsed("price", Utils.formatMoney(totalPrice) + "")));
     }
 
     @Override
